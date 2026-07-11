@@ -1,151 +1,140 @@
-const siteHeader = document.querySelector(".site-header");
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
-const navLinks = [...document.querySelectorAll('.site-nav a[href^="#"]')];
 
 function setNavigation(open) {
-  siteNav?.classList.toggle("is-open", open);
-  navToggle?.classList.toggle("is-open", open);
-  navToggle?.setAttribute("aria-expanded", String(open));
-  navToggle?.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  if (!navToggle || !siteNav) return;
+
+  navToggle.setAttribute("aria-expanded", String(open));
+  navToggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  siteNav.classList.toggle("is-open", open);
   document.body.classList.toggle("nav-open", open);
 }
 
-navToggle?.addEventListener("click", () => {
-  const willOpen = !siteNav?.classList.contains("is-open");
-  setNavigation(willOpen);
-});
+if (navToggle && siteNav) {
+  navToggle.addEventListener("click", () => {
+    setNavigation(navToggle.getAttribute("aria-expanded") !== "true");
+  });
 
-navLinks.forEach((link) => {
-  link.addEventListener("click", () => setNavigation(false));
-});
+  siteNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setNavigation(false));
+  });
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    setNavigation(false);
-  }
-});
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setNavigation(false);
+  });
 
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 900) {
-    setNavigation(false);
-  }
-});
-
-function updateHeader() {
-  siteHeader?.classList.toggle("is-scrolled", window.scrollY > 18);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 960) setNavigation(false);
+  });
 }
 
-updateHeader();
-window.addEventListener("scroll", updateHeader, { passive: true });
-
-const revealItems = document.querySelectorAll(".reveal:not(.is-visible)");
+const reveals = document.querySelectorAll(".reveal:not(.is-visible)");
 
 if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
+  const observer = new IntersectionObserver(
+    (entries, instance) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        instance.unobserve(entry.target);
       });
     },
-    { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
+    { rootMargin: "0px 0px -8%", threshold: 0.08 }
   );
 
-  revealItems.forEach((item) => revealObserver.observe(item));
+  reveals.forEach((element) => observer.observe(element));
 } else {
-  revealItems.forEach((item) => item.classList.add("is-visible"));
+  reveals.forEach((element) => element.classList.add("is-visible"));
 }
 
-const projectFilters = [...document.querySelectorAll(".project-filter")];
-const projectCards = [...document.querySelectorAll(".project-card")];
-const projectCount = document.querySelector(".project-count strong");
+const quoteForm = document.querySelector("#quote-form");
+const blueprintInput = document.querySelector("#blueprint");
+const fileName = document.querySelector("#file-name");
+const formStatus = document.querySelector("#form-status");
+const projectType = document.querySelector("#project-type");
 
-function filterProjects(category) {
-  let visibleCount = 0;
+const projectPresets = {
+  caravan: "Accommodation caravan furniture",
+  office: "Commercial office furniture",
+  commercial: "Commercial office furniture",
+  hospitality: "Hospitality furniture",
+  retail: "Retail furniture",
+  manufacturing: "Furniture contract manufacturing"
+};
 
-  projectCards.forEach((card) => {
-    const visible = category === "all" || card.dataset.category === category;
-    card.hidden = !visible;
-
-    if (visible) {
-      visibleCount += 1;
-      requestAnimationFrame(() => card.classList.add("is-visible"));
-    } else {
-      const details = card.querySelector("details");
-      if (details) details.open = false;
-    }
-  });
-
-  if (projectCount) {
-    projectCount.textContent = String(visibleCount);
-  }
+if (projectType) {
+  const project = new URLSearchParams(window.location.search).get("project");
+  if (project && projectPresets[project]) projectType.value = projectPresets[project];
 }
 
-projectFilters.forEach((filter, index) => {
-  filter.addEventListener("click", () => {
-    projectFilters.forEach((button) => {
-      const active = button === filter;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-selected", String(active));
-      button.tabIndex = active ? 0 : -1;
-    });
-
-    filterProjects(filter.dataset.filter || "all");
+if (blueprintInput && fileName) {
+  blueprintInput.addEventListener("change", () => {
+    const selectedFile = blueprintInput.files && blueprintInput.files[0];
+    fileName.textContent = selectedFile ? selectedFile.name : "PDF, CAD, spreadsheet, or image";
   });
+}
 
-  filter.addEventListener("keydown", (event) => {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+function cleanValue(formData, key) {
+  const value = formData.get(key);
+  return typeof value === "string" && value.trim() ? value.trim() : "Not provided";
+}
+
+if (quoteForm) {
+  quoteForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!quoteForm.checkValidity()) {
+      quoteForm.reportValidity();
+      if (formStatus) {
+        formStatus.textContent = "Please complete the required project and contact fields.";
+        formStatus.classList.add("error");
+      }
       return;
     }
 
-    event.preventDefault();
-    let targetIndex = index;
+    const data = new FormData(quoteForm);
+    const selectedFile = blueprintInput && blueprintInput.files ? blueprintInput.files[0] : null;
+    const company = cleanValue(data, "company");
+    const selectedProject = cleanValue(data, "project_type");
+    const subject = `Production quote request | ${company} | ${selectedProject}`;
+    const body = [
+      "BLUE CHIP PRODUCTION QUOTE REQUEST",
+      "",
+      "CONTACT",
+      `Name: ${cleanValue(data, "contact_name")}`,
+      `Company: ${company}`,
+      `Email: ${cleanValue(data, "email")}`,
+      `Phone: ${cleanValue(data, "phone")}`,
+      "",
+      "PROJECT SCOPE",
+      `Project type: ${selectedProject}`,
+      `Project stage: ${cleanValue(data, "project_stage")}`,
+      `Estimated volume / quantity: ${cleanValue(data, "quantity")}`,
+      `Required delivery / installation: ${cleanValue(data, "timeline")}`,
+      `Delivery location: ${cleanValue(data, "delivery_location")}`,
+      `Material / finish preference: ${cleanValue(data, "material_preference")}`,
+      "",
+      "DIMENSIONS / ROOM TYPES",
+      cleanValue(data, "dimensions"),
+      "",
+      "PERFORMANCE REQUIREMENTS / NOTES",
+      cleanValue(data, "message"),
+      "",
+      `Drawing selected: ${selectedFile ? selectedFile.name : "No file selected"}`,
+      selectedFile ? "Please attach the selected drawing to this email before sending." : "",
+      "",
+      "Submitted from bluechipspc.com"
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-    if (event.key === "ArrowLeft") targetIndex = (index - 1 + projectFilters.length) % projectFilters.length;
-    if (event.key === "ArrowRight") targetIndex = (index + 1) % projectFilters.length;
-    if (event.key === "Home") targetIndex = 0;
-    if (event.key === "End") targetIndex = projectFilters.length - 1;
+    if (formStatus) {
+      formStatus.classList.remove("error");
+      formStatus.textContent = selectedFile
+        ? "Your email application is opening. Attach the selected drawing, then send the request."
+        : "Your email application is opening with the quotation brief.";
+    }
 
-    projectFilters[targetIndex].focus();
-    projectFilters[targetIndex].click();
+    window.location.href = `mailto:info@bluechipspc.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
-});
-
-document.querySelectorAll(".project-card details").forEach((details) => {
-  details.addEventListener("toggle", () => {
-    if (!details.open) return;
-
-    const card = details.closest(".project-card");
-    document.querySelectorAll(".project-card details[open]").forEach((openDetails) => {
-      if (openDetails !== details && openDetails.closest(".project-card") !== card) {
-        openDetails.open = false;
-      }
-    });
-  });
-});
-
-const observedSections = navLinks
-  .map((link) => document.querySelector(link.getAttribute("href")))
-  .filter(Boolean);
-
-if ("IntersectionObserver" in window && observedSections.length) {
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      const visibleEntry = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-      if (!visibleEntry) return;
-
-      navLinks.forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("href") === `#${visibleEntry.target.id}`);
-      });
-    },
-    { rootMargin: "-28% 0px -58% 0px", threshold: [0.01, 0.2, 0.5] },
-  );
-
-  observedSections.forEach((section) => sectionObserver.observe(section));
 }

@@ -1,20 +1,20 @@
-# Blue Chip Engineering Website
+# Blue Chip Manufacturing Website
 
-Static website for `bluechipspc.com`, presenting Blue Chip Engineering's contracting, maintenance, digital transformation, specialized services, and project experience.
+Static multi-page website for `bluechipspc.com`, presenting Blue Chip Engineering's accommodation caravan, site-office, and commercial furniture manufacturing services.
 
-## Files
+## Pages
 
-- `index.html` - single-page website
-- `styles.css` - site styling
-- `script.js` - navigation, project filtering, active section states, and motion
-- `assets/` - optimized brand, hero, and favicon assets
-- `CNAME` - GitHub Pages custom domain
+- `index.html` - sector overview and production process
+- `caravan-furniture.html` - accommodation and office caravan furniture
+- `commercial-furniture.html` - workplace, hospitality, and retail furniture
+- `manufacturing-capabilities.html` - production methods and material library
+- `quote-contact.html` - structured B2B quotation enquiry
+- `styles.css` - shared responsive design system
+- `script.js` - navigation, reveal motion, and quote-email workflow
+- `assets/` - optimized brand and manufacturing imagery
 
-## GitHub Pages
+## Publishing
 
-The site is published from GitHub Pages with the following settings:
+The site is published from the `main` branch through GitHub Pages and uses `bluechipspc.com` as its custom domain.
 
-1. Source: Deploy from branch
-2. Branch: `main`
-3. Folder: `/root`
-4. Custom domain: `bluechipspc.com`
+The quote form prepares a structured email to `info@bluechipspc.com`. Because GitHub Pages is static hosting, selected drawings must be attached by the sender in their email application.
