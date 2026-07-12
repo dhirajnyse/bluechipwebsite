@@ -130,7 +130,7 @@ function cleanValue(formData, key) {
   return typeof value === "string" && value.trim() ? value.trim() : "Not provided";
 }
 
-const quoteRecipient = "info@capsa-eng.com";
+const quoteRecipient = "info@bluechipspc.com";
 
 function loadImageAsDataUrl(url) {
   return fetch(url, { cache: "force-cache" })
@@ -452,7 +452,7 @@ if (quoteForm) {
         quotePackage.scrollIntoView({ behavior: scrollBehavior, block: "nearest" });
       }
     } catch (error) {
-      setQuoteStatus("The PDF could not be prepared. Please email info@capsa-eng.com directly.", true);
+      setQuoteStatus("The PDF could not be prepared. Please email info@bluechipspc.com directly.", true);
     } finally {
       if (submitButton) submitButton.disabled = false;
     }
