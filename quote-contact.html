@@ -51,7 +51,26 @@
             <div class="field field-full"><label for="message">Performance requirements / notes *</label><textarea id="message" name="message" rows="6" placeholder="Include occupancy, duty cycle, moisture or fire criteria, finish expectations, packaging, installation, and required submittals." required></textarea></div>
           </div></fieldset>
 
-          <div class="form-submit"><label class="consent"><input id="consent" name="consent" type="checkbox" required><span>I confirm that Bluechip Engineering &amp; Contracting LLC and its project support team may use these details to respond to this enquiry. *</span></label><button class="button button-primary" type="submit">Prepare PDF &amp; email <span aria-hidden="true">&#8599;</span></button><p class="form-status" id="form-status" role="status" aria-live="polite"></p></div>
+          <div class="form-submit">
+            <label class="consent"><input id="consent" name="consent" type="checkbox" required><span>I confirm that Bluechip Engineering &amp; Contracting LLC and its project support team may use these details to respond to this enquiry. *</span></label>
+            <button class="button button-primary" type="submit">Generate quote PDF <span aria-hidden="true">&#8595;</span></button>
+            <p class="submission-note">This creates the quote package first. Nothing is sent automatically.</p>
+            <div class="quote-package" id="quote-package" hidden>
+              <p class="eyebrow">Quote package ready</p>
+              <h3>Choose how to continue.</h3>
+              <p class="quote-package-summary"><strong id="quote-package-file"></strong> is ready for <strong>info@capsa-eng.com</strong>. Nothing has been sent yet.</p>
+              <div class="quote-package-actions">
+                <button class="button button-primary" id="email-draft-button" type="button">Open addressed email <span aria-hidden="true">&#8599;</span></button>
+                <button class="button button-dark" id="share-pdf-button" type="button">Share PDF with attachment <span aria-hidden="true">&#8599;</span></button>
+                <button class="button button-quiet" id="download-pdf-button" type="button">Download PDF <span aria-hidden="true">&#8595;</span></button>
+              </div>
+              <div class="quote-package-guidance">
+                <p><strong>Open addressed email:</strong> the recipient and message are filled in. The PDF downloads so you can attach it from Downloads.</p>
+                <p id="share-pdf-guidance"><strong>Share PDF with attachment:</strong> Windows opens its Share panel. Choose Outlook, enter info@capsa-eng.com, review, and send.</p>
+              </div>
+            </div>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </div>
         </form>
 
         <aside class="quote-aside reveal" aria-label="Quotation guidance">

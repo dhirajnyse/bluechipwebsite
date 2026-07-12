@@ -1515,6 +1515,12 @@ ol:last-child {
   border-top: 1px solid var(--line);
 }
 
+.submission-note {
+  margin: 10px 0 0;
+  color: var(--slate);
+  font-size: 12px;
+}
+
 .consent {
   display: flex;
   max-width: 660px;
@@ -1541,6 +1547,71 @@ ol:last-child {
 
 .form-status.error {
   color: #a72713;
+}
+
+.quote-package {
+  margin-top: 30px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.quote-package[hidden] {
+  display: none;
+}
+
+.quote-package .eyebrow {
+  margin-bottom: 8px;
+}
+
+.quote-package h3 {
+  margin-bottom: 10px;
+  font-size: 27px;
+}
+
+.quote-package-summary {
+  margin-bottom: 22px;
+  color: var(--slate);
+}
+
+.quote-package-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quote-package-actions [hidden],
+.quote-package-guidance [hidden] {
+  display: none;
+}
+
+.button-quiet {
+  color: var(--charcoal);
+  border-color: #aeb6ba;
+  background: var(--white);
+}
+
+.button-quiet:hover {
+  border-color: var(--charcoal);
+  background: var(--muted);
+}
+
+.quote-package-guidance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.quote-package-guidance p {
+  margin: 0;
+  color: var(--slate);
+  font-size: 12px;
+}
+
+.quote-package-guidance.is-single {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .quote-aside {
@@ -2140,6 +2211,15 @@ ol:last-child {
 
   .quote-form {
     padding: 24px 18px;
+  }
+
+  .quote-package-actions .button {
+    width: 100%;
+  }
+
+  .quote-package-guidance {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .quote-aside {

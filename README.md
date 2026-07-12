@@ -20,4 +20,4 @@ The site is published from the `main` branch through GitHub Pages and uses `blue
 
 The homepage film is a locally hosted, silent 720p MP4 with a branded poster. It starts muted while substantially in view, pauses when it leaves the viewport, and does not auto-start for reduced-motion or data-saver users.
 
-The quote form generates a branded inquiry PDF and prepares the message for `info@capsa-eng.com`. Compatible browsers pass the PDF and message to the native share sheet; other browsers download the PDF and open a pre-addressed email draft. Selected project drawings remain on the sender's device and must be added separately in the email application.
+The quote form generates a branded inquiry PDF, then clearly offers three deliberate next steps: open a pre-addressed email and download the PDF for attachment, pass the PDF to the native share sheet, or download the PDF only. Nothing is sent automatically. Selected project drawings remain on the sender's device and must be added separately in the email application.

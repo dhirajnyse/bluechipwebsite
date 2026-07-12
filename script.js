@@ -95,6 +95,14 @@ const blueprintInput = document.querySelector("#blueprint");
 const fileName = document.querySelector("#file-name");
 const formStatus = document.querySelector("#form-status");
 const projectType = document.querySelector("#project-type");
+const quotePackage = document.querySelector("#quote-package");
+const quotePackageFile = document.querySelector("#quote-package-file");
+const emailDraftButton = document.querySelector("#email-draft-button");
+const sharePdfButton = document.querySelector("#share-pdf-button");
+const sharePdfGuidance = document.querySelector("#share-pdf-guidance");
+const quotePackageGuidance = document.querySelector(".quote-package-guidance");
+const downloadPdfButton = document.querySelector("#download-pdf-button");
+let preparedQuotePackage = null;
 
 const projectPresets = {
   caravan: "Accommodation caravan furniture",
@@ -352,16 +360,62 @@ function downloadPdf(blob, fileName) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
+function setQuoteStatus(message, isError = false) {
+  if (!formStatus) return;
+  formStatus.textContent = message;
+  formStatus.classList.toggle("error", isError);
+}
+
+function openPreparedEmail() {
+  if (!preparedQuotePackage) return;
+  const { pdfBlob, pdfFileName, subject, body, selectedFile } = preparedQuotePackage;
+  downloadPdf(pdfBlob, pdfFileName);
+  setQuoteStatus(`The PDF was downloaded. Your addressed email is opening; attach ${pdfFileName}${selectedFile ? ` and ${selectedFile.name}` : ""} from your device, then send.`);
+  window.setTimeout(() => {
+    window.location.href = `mailto:${quoteRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }, 300);
+}
+
+async function sharePreparedPdf() {
+  if (!preparedQuotePackage || !preparedQuotePackage.canSharePdf) return;
+  setQuoteStatus(`Windows Share is opening. Choose Outlook, enter ${quoteRecipient}, review the message, and send.`);
+
+  try {
+    await navigator.share(preparedQuotePackage.sharePayload);
+    setQuoteStatus(`The PDF was handed to your selected application. Confirm ${quoteRecipient} as the recipient and press Send; the website has not sent it automatically.`);
+  } catch (error) {
+    if (error && error.name === "AbortError") {
+      setQuoteStatus("Sharing was cancelled. Nothing was sent; choose another option when ready.");
+      return;
+    }
+    setQuoteStatus("Windows could not share the attachment. Use Open addressed email or Download PDF instead.", true);
+  }
+}
+
+if (emailDraftButton) emailDraftButton.addEventListener("click", openPreparedEmail);
+if (sharePdfButton) sharePdfButton.addEventListener("click", sharePreparedPdf);
+if (downloadPdfButton) {
+  downloadPdfButton.addEventListener("click", () => {
+    if (!preparedQuotePackage) return;
+    downloadPdf(preparedQuotePackage.pdfBlob, preparedQuotePackage.pdfFileName);
+    setQuoteStatus(`${preparedQuotePackage.pdfFileName} was downloaded. Nothing was sent.`);
+  });
+}
+
 if (quoteForm) {
+  quoteForm.addEventListener("input", () => {
+    if (!preparedQuotePackage) return;
+    preparedQuotePackage = null;
+    if (quotePackage) quotePackage.hidden = true;
+    setQuoteStatus("Project details changed. Generate a new quote PDF when ready.");
+  });
+
   quoteForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!quoteForm.checkValidity()) {
       quoteForm.reportValidity();
-      if (formStatus) {
-        formStatus.textContent = "Please complete the required project and contact fields.";
-        formStatus.classList.add("error");
-      }
+      setQuoteStatus("Please complete the required project and contact fields.", true);
       return;
     }
 
@@ -370,10 +424,7 @@ if (quoteForm) {
     const selectedFile = blueprintInput && blueprintInput.files ? blueprintInput.files[0] : null;
 
     if (submitButton) submitButton.disabled = true;
-    if (formStatus) {
-      formStatus.classList.remove("error");
-      formStatus.textContent = "Preparing your branded inquiry PDF...";
-    }
+    setQuoteStatus("Preparing your branded inquiry PDF...");
 
     try {
       const logoDataUrl = await quoteLogoPromise;
@@ -389,34 +440,19 @@ if (quoteForm) {
         typeof navigator.canShare === "function" &&
         navigator.canShare({ files: [pdfFile] });
 
-      if (canSharePdf) {
-        if (formStatus) {
-          formStatus.textContent = `Choose your email application. The PDF and message are ready; send them to ${quoteRecipient}.`;
-        }
-        try {
-          await navigator.share(sharePayload);
-          if (formStatus) formStatus.textContent = `The PDF and message were passed to your selected application for ${quoteRecipient}.`;
-          return;
-        } catch (error) {
-          if (error && error.name === "AbortError") {
-            if (formStatus) formStatus.textContent = "Email sharing was cancelled. Select Prepare PDF & email to try again.";
-            return;
-          }
-        }
+      preparedQuotePackage = { pdfBlob, pdfFile, pdfFileName, subject, body, selectedFile, sharePayload, canSharePdf };
+      if (quotePackageFile) quotePackageFile.textContent = pdfFileName;
+      if (sharePdfButton) sharePdfButton.hidden = !canSharePdf;
+      if (sharePdfGuidance) sharePdfGuidance.hidden = !canSharePdf;
+      if (quotePackageGuidance) quotePackageGuidance.classList.toggle("is-single", !canSharePdf);
+      if (quotePackage) quotePackage.hidden = false;
+      setQuoteStatus("Your quote PDF is ready. Choose an email or download option above; nothing has been sent.");
+      if (quotePackage) {
+        const scrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+        quotePackage.scrollIntoView({ behavior: scrollBehavior, block: "nearest" });
       }
-
-      downloadPdf(pdfBlob, pdfFileName);
-      if (formStatus) {
-        formStatus.textContent = `The PDF was downloaded and an email draft is opening. Attach ${pdfFileName}${selectedFile ? ` and ${selectedFile.name}` : ""}, then send it.`;
-      }
-      window.setTimeout(() => {
-        window.location.href = `mailto:${quoteRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      }, 300);
     } catch (error) {
-      if (formStatus) {
-        formStatus.classList.add("error");
-        formStatus.textContent = "The PDF could not be prepared. Please email info@capsa-eng.com directly.";
-      }
+      setQuoteStatus("The PDF could not be prepared. Please email info@capsa-eng.com directly.", true);
     } finally {
       if (submitButton) submitButton.disabled = false;
     }
