@@ -194,6 +194,9 @@ function buildQuoteEmail(data, selectedFile, pdfFileName) {
     "",
     `Drawing selected: ${selectedFile ? selectedFile.name : "No file selected"}`,
     "",
+    "THANK YOU FOR YOUR INQUIRY",
+    "We shall get back to you at the earliest. In the meantime, for further discussion, please contact info@bluechipspc.com.",
+    "",
     "Submitted from bluechipspc.com"
   ]
     .filter(Boolean)
