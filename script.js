@@ -99,7 +99,7 @@ function loadImageAsDataUrl(url) {
 }
 
 const quoteLogoPromise = quoteForm
-  ? loadImageAsDataUrl("assets/bluechip-logo-transparent.png").catch(() => null)
+  ? loadImageAsDataUrl("assets/bluechip-logo-pdf.png").catch(() => null)
   : Promise.resolve(null);
 
 function safeFilePart(value) {
