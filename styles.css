@@ -511,6 +511,60 @@ ol:last-child {
   border-right: 0;
 }
 
+.promo-section {
+  padding-block: 88px 96px;
+}
+
+.promo-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 42px;
+}
+
+.promo-heading h2,
+.promo-heading p {
+  margin-bottom: 0;
+}
+
+.promo-intro {
+  padding-left: 22px;
+  border-left: 3px solid var(--orange);
+}
+
+.promo-runtime {
+  display: block;
+  margin-bottom: 8px;
+  color: #ff8a52;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.promo-intro p {
+  color: #c9ced1;
+  font-size: 17px;
+}
+
+.promo-media {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #3b4247;
+  border-radius: 4px;
+  background: #0e1113;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28);
+}
+
+.promo-media video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #0e1113;
+}
+
 .sector-pathways {
   padding-top: 96px;
 }
@@ -1754,6 +1808,7 @@ ol:last-child {
   }
 
   .section-heading,
+  .promo-heading,
   .intro-layout,
   .value-layout,
   .technical-layout,
@@ -1773,6 +1828,15 @@ ol:last-child {
   .section-heading {
     align-items: start;
     margin-bottom: 44px;
+  }
+
+  .promo-section {
+    padding-block: 76px 82px;
+  }
+
+  .promo-heading {
+    align-items: start;
+    margin-bottom: 34px;
   }
 
   .section-heading > p {
@@ -1935,6 +1999,7 @@ ol:last-child {
   }
 
   .section-heading,
+  .promo-heading,
   .intro-layout,
   .value-layout,
   .technical-layout,
@@ -1948,6 +2013,22 @@ ol:last-child {
   .consultation-layout,
   .cta-layout {
     gap: 30px;
+  }
+
+  .promo-section {
+    padding-block: 62px 66px;
+  }
+
+  .promo-heading {
+    margin-bottom: 26px;
+  }
+
+  .promo-intro {
+    padding-left: 16px;
+  }
+
+  .promo-intro p {
+    font-size: 15px;
   }
 
   .pathway-grid,

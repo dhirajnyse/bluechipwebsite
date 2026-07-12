@@ -47,6 +47,49 @@ if ("IntersectionObserver" in window) {
   reveals.forEach((element) => element.classList.add("is-visible"));
 }
 
+const promoVideo = document.querySelector("#promo-video");
+
+if (promoVideo) {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+  let observerAction = false;
+  let userPaused = false;
+
+  promoVideo.addEventListener("pause", () => {
+    if (!observerAction) userPaused = true;
+  });
+
+  promoVideo.addEventListener("play", () => {
+    if (!observerAction) userPaused = false;
+  });
+
+  if (!reducedMotion && !saveData && "IntersectionObserver" in window) {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+            if (promoVideo.paused && !userPaused) {
+              observerAction = true;
+              promoVideo.play().catch(() => {}).finally(() => {
+                observerAction = false;
+              });
+            }
+          } else if (!promoVideo.paused) {
+            observerAction = true;
+            promoVideo.pause();
+            window.setTimeout(() => {
+              observerAction = false;
+            }, 0);
+          }
+        });
+      },
+      { threshold: [0, 0.35, 0.75] }
+    );
+
+    videoObserver.observe(promoVideo);
+  }
+}
+
 const quoteForm = document.querySelector("#quote-form");
 const blueprintInput = document.querySelector("#blueprint");
 const fileName = document.querySelector("#file-name");
