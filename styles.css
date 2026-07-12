@@ -718,22 +718,29 @@ ol:last-child {
 
 .capability-copy {
   display: flex;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  padding: 70px max(48px, calc((100vw - var(--max-width)) / 2));
+  padding-block: 78px;
+  padding-right: max(48px, calc((100vw - var(--max-width)) / 2));
+  padding-left: clamp(48px, 5vw, 96px);
 }
 
 .capability-copy h2 {
+  max-width: 560px;
   font-size: 42px;
+  text-wrap: balance;
 }
 
 .capability-copy > p:not(.eyebrow) {
+  max-width: 560px;
   color: #c1c7ca;
+  text-wrap: pretty;
 }
 
 .check-list {
-  width: 100%;
+  width: min(100%, 560px);
   margin: 20px 0 34px;
   padding: 0;
   list-style: none;
