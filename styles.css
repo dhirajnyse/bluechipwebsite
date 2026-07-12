@@ -208,6 +208,12 @@ ol:last-child {
   transform: translateY(-2px);
 }
 
+.button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+  transform: none;
+}
+
 .button-primary {
   color: var(--white);
   background: var(--orange);

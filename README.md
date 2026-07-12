@@ -10,11 +10,12 @@ Static multi-page website for `bluechipspc.com`, presenting Blue Chip Engineerin
 - `manufacturing-capabilities.html` - production methods and material library
 - `quote-contact.html` - structured B2B quotation enquiry
 - `styles.css` - shared responsive design system
-- `script.js` - navigation, reveal motion, and quote-email workflow
+- `script.js` - navigation, reveal motion, PDF generation, and quote-email workflow
 - `assets/` - optimized brand and manufacturing imagery
+- `assets/vendor/` - locally hosted jsPDF browser library and license
 
 ## Publishing
 
 The site is published from the `main` branch through GitHub Pages and uses `bluechipspc.com` as its custom domain.
 
-The quote form prepares a structured email to `info@bluechipspc.com`. Because GitHub Pages is static hosting, selected drawings must be attached by the sender in their email application.
+The quote form generates a branded inquiry PDF and prepares the message for `info@capsa-eng.com`. Compatible browsers pass the PDF and message to the native share sheet; other browsers download the PDF and open a pre-addressed email draft. Selected project drawings remain on the sender's device and must be added separately in the email application.
