@@ -735,8 +735,8 @@ ol:last-child {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.3fr 0.8fr 0.9fr;
-  gap: 80px;
+  grid-template-columns: 1.05fr 0.72fr 1.23fr;
+  gap: 64px;
   padding-bottom: 62px;
 }
 
@@ -770,6 +770,22 @@ ol:last-child {
 
 .footer-column a:hover {
   color: var(--orange);
+}
+
+.footer-contact {
+  gap: 8px;
+}
+
+.footer-contact strong {
+  margin-bottom: 4px;
+  color: var(--white);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.footer-contact span,
+.footer-contact a {
+  line-height: 1.45;
 }
 
 .footer-base {
